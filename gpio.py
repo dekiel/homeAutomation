@@ -15,8 +15,8 @@ def gabinetOff():
 def gabinetStatus():
     with open('/sys/class/gpio/gpio102/value') as f:
         status = f.read()
-    if status == 1:
+    if status.split('\n')[0] == "1":
         return "ogrzewanie w gabinecie jest wlaczone"
-    if status == 0:
+    if status.split('\n')[0] == "0":
         return "ogrzewanie w gabinecie jest wylaczone"
     return "status ogrzewania w gabinecie nieznany"
