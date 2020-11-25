@@ -4,7 +4,7 @@ from email.message import EmailMessage
 
 smtp = 'smtp.grupataurus.pl'
 smtp_port = '587'
-smtp_sender = 'przemyslaw.pokrywka@pokrywkait.com'
+smtp_sender =
 smtp_to = 'przemek.pokrywka@gmail.com'
 
 if __name__ == '__main__':
@@ -15,8 +15,8 @@ if __name__ == '__main__':
     msg['To'] = smtp_to
     #context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp, 587) as server:
-        server.user = 'przemyslaw.pokrywka@pokrywkait.com'
-        server.password = 'SuperMoto999!'
+        server.user =
+        server.password =
         #server.auth_plain()
         server.login(smtp_sender, server.password)
         server.sendmail(smtp_sender, smtp_to, msg)
