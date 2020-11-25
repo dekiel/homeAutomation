@@ -21,5 +21,7 @@ if __name__ == '__main__':
             try:
                 retcode = subprocess.run(["systemctl", "restart", "owserver.service"], check=True)
                 retcode.check_returncode()
+                value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
+                sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
             except subprocess.CalledProcessError as e:
                 print("blad restartu owserver")
