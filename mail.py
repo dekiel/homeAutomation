@@ -2,10 +2,10 @@
 import smtplib, ssl
 from email.message import EmailMessage
 
-smtp = 'smtp.grupataurus.pl'
+smtp =
 smtp_port = '587'
 smtp_sender =
-smtp_to = 'przemek.pokrywka@gmail.com'
+smtp_to =
 
 if __name__ == '__main__':
     msg = EmailMessage()
