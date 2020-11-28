@@ -34,7 +34,7 @@ if __name__ == '__main__':
         else:
             print("Blad odczytu czujnika, restartuje owserver")
             try:
-                retcode = subprocess.run(["systemctl", "restart", "owserver.service"], check=True)
+                retcode = subprocess.run(["/bin/systemctl", "restart", "owserver.service"], check=True)
                 retcode.check_returncode()
                 if owproxy.present(sensor[0]):
                     value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
