@@ -1,6 +1,11 @@
 from flask import Flask
 app = Flask(__name__)
 
+
+
+@app.route('/areyoualive')
+def areyoualive():
+    return "yes"
 @app.route('/gabinet-on')
 def gabinetOn():
     with open('/sys/class/gpio/gpio102/value', 'w') as f:

@@ -9,6 +9,11 @@ sensors = [('/28.8AAB110B0000/', 'grupa_mieszajaca', 9911), ('/28.AAE0F3521401/'
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+def reboot():
+    sock.sendto(bytes('panic', 'utf-8'), (UDP_IP, 9999))
+    os.system('reboot now')
+
+
 if __name__ == '__main__':
     count = 2
     while count > 1:
@@ -17,24 +22,26 @@ if __name__ == '__main__':
             if "python3" in p.name():
                 count=+count
                 if count > 2:
-                    sock.sendto(bytes('panic', 'utf-8'), (UDP_IP, 9999))
-                    os.system('reboot now')
+                    reboot()
     time.sleep(5)
 
     owproxy = protocol.proxy(host="127.0.0.1", port=4304)
     for sensor in sensors:
-        present = owproxy.present(sensor[0])
-        if present:
+        if owproxy.present(sensor[0]):
             value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
             time.sleep(1)
             sock.sendto(bytes(value, 'utf-8'),(UDP_IP, sensor[2]))
-            sock.sendto(bytes('ok', 'utf-8'), (UDP_IP, 9998))
         else:
             print("Blad odczytu czujnika, restartuje owserver")
             try:
                 retcode = subprocess.run(["systemctl", "restart", "owserver.service"], check=True)
                 retcode.check_returncode()
-                value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
-                sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                if owproxy.present(sensor[0]):
+                    value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
+                    sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                else:
+                    print("Czujnik {} nadal nie dostepny".format(sensor[1]))
+                    reboot()
             except subprocess.CalledProcessError as e:
                 print("blad restartu owserver")
+                reboot()
