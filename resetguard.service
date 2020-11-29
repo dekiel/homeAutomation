@@ -1,0 +1,16 @@
+[Unit]
+Description=Reset rock watchdog
+After=network.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+ExecStart=/home/przemek/github/dekiel/resetWatchDog.py
+TimeoutSec=30
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=350
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target

@@ -5,7 +5,8 @@ app = Flask(__name__)
 
 @app.route('/areyoualive')
 def areyoualive():
-    return "yes"
+    with open('/root/webAPI/status') as f:
+        return f.read().split('\n')[0]
 @app.route('/gabinet-on')
 def gabinetOn():
     with open('/sys/class/gpio/gpio102/value', 'w') as f:

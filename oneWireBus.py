@@ -9,20 +9,21 @@ sensors = [('/28.8AAB110B0000/', 'grupa_mieszajaca', 9911), ('/28.AAE0F3521401/'
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-def reboot():
+def panic():
+    with open('/root/webAPI/status', 'w') as f:
+        f.write("panic")
     sock.sendto(bytes('panic', 'utf-8'), (UDP_IP, 9999))
     os.system('reboot now')
-
 
 if __name__ == '__main__':
     count = 2
     while count > 1:
         count = 0
-        for p in psutil.process_iter():
-            if "python3" in p.name():
-                count=+count
+        for p in psutil.process_iter(["name"]):
+            if "oneWireBus" in p.name():
+                count += 1
                 if count > 2:
-                    reboot()
+                    panic()
     time.sleep(5)
 
     owproxy = protocol.proxy(host="127.0.0.1", port=4304)
@@ -36,12 +37,13 @@ if __name__ == '__main__':
             try:
                 retcode = subprocess.run(["/bin/systemctl", "restart", "owserver.service"], check=True)
                 retcode.check_returncode()
+                time.sleep(5)
                 if owproxy.present(sensor[0]):
                     value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
                     sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
                 else:
                     print("Czujnik {} nadal nie dostepny".format(sensor[1]))
-                    reboot()
+                    panic()
             except subprocess.CalledProcessError as e:
                 print("blad restartu owserver")
-                reboot()
+                panic()
