@@ -10,7 +10,7 @@ sensors = [('/28.8AAB110B0000/', 'grupa_mieszajaca', 9911), ('/28.AAE0F3521401/'
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 def panic():
-    with open('/root/webAPI/status', 'w') as f:
+    with open('/home/rock64/webAPI/status', 'w') as f:
         f.write("panic")
     sock.sendto(bytes('panic', 'utf-8'), (UDP_IP, 9999))
     os.system('reboot now')
@@ -26,7 +26,9 @@ if __name__ == '__main__':
                     panic()
     time.sleep(5)
 
-    owproxy = protocol.proxy(host="127.0.0.1", port=4304)
+    try:
+        owproxy = protocol.proxy(host="127.0.0.1", port=4304)
+    except pyownet.protocol.OwnetError:
     for sensor in sensors:
         if owproxy.present(sensor[0]):
             value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
