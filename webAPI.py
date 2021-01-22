@@ -1,7 +1,7 @@
 from flask import Flask
 app = Flask(__name__)
 
-webAPIRoot = "/home/rock64"
+webAPIRoot = "/home/rock64/webAPI"
 
 def heaterON(gpionr, room):
     with open('/sys/class/gpio/gpio{}/value'.format(gpionr), 'w') as f:
@@ -27,7 +27,7 @@ def heaterStatus(gpionr, room):
 
 @app.route('/areyoualive')
 def areyoualive():
-    with open('{}/webAPI/status'.format(webAPIRoot)) as f:
+    with open('{}/status'.format(webAPIRoot)) as f:
         return f.read().split('\n')[0]
 
 @app.route('/lazienka-gora-on')
@@ -53,7 +53,7 @@ def gabinetStatus():
 def sypialniaON():
     return heaterON(79, "sypialnia")
 @app.route('/sypialnia-off')
-def gabinetOff():
+def sypialniaOFF():
     return heaterOFF(79, "sypialnia")
 
 @app.route('/przedpokoj-on')

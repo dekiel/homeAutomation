@@ -6,9 +6,7 @@ After=network-online.target
 
 [Service]
 ExecStart=/home/przemek/github/dekiel/homeAutomation/resetWatchDog.py
-TimeoutSec=5
-Restart=on-failure
-RestartSec=5
+Type=oneshot
 
 [Install]
 WantedBy=multi-user.target

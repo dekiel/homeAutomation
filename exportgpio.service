@@ -5,11 +5,8 @@ After=systemd-user-sessions.service
 After=network-online.target
 
 [Service]
-ExecStart=/home/rock64/homeAutomation/exportgpio.sh
+ExecStart=/home/rock64/homeAutomation/exportGPIO.sh
 Type=oneshot
-TimeoutSec=10
-Restart=on-failure
-RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

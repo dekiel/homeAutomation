@@ -5,7 +5,7 @@ After=systemd-user-sessions.service
 After=network-online.target
 
 [Service]
-WorkingDirectory=/home/przemek/github/dekiel/homeAutomation
+WorkingDirectory=/home/rock64/homeAutomation
 ExecStart=/usr/bin/gunicorn3 --workers=4 -b 0.0.0.0:4500 webAPI:app
 Restart=always
 
