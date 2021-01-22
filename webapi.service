@@ -1,0 +1,13 @@
+[Unit]
+Description=Home automation web API
+After=network.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/przemek/github/dekiel/homeAutomation
+ExecStart=/usr/bin/gunicorn3 --workers=4 -b 0.0.0.0:4500 webAPI:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

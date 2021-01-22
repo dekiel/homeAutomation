@@ -1,0 +1,15 @@
+[Unit]
+Description=Export gpio for HVAC
+After=network.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+ExecStart=/home/rock64/homeAutomation/exportgpio.sh
+Type=oneshot
+TimeoutSec=10
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
