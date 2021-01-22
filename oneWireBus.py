@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from pyownet import protocol
-import socket, time, subprocess, psutil, os
+import socket, time, subprocess, psutil, os, logging, logging.handlers
 
 UDP_IP = "192.168.255.123"
 
@@ -16,6 +16,12 @@ def panic():
     os.system('reboot now')
 
 if __name__ == '__main__':
+    my_logger = logging.getLogger('sysloger')
+    my_logger.setLevel(logging.DEBUG)
+
+    handler = logging.handlers.SysLogHandler(address='/dev/log')
+
+    my_logger.addHandler(handler)
     count = 2
     while count > 1:
         count = 0
@@ -33,6 +39,7 @@ if __name__ == '__main__':
                 value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
                 time.sleep(1)
                 sock.sendto(bytes(value, 'utf-8'),(UDP_IP, sensor[2]))
+                my_logger.info("Read tmp for {}".format(sensor[1]))
             else:
                 print("Blad odczytu czujnika, restartuje owserver")
                 try:
