@@ -28,24 +28,33 @@ if __name__ == '__main__':
 
     try:
         owproxy = protocol.proxy(host="127.0.0.1", port=4304)
-    except pyownet.protocol.OwnetError:
-    for sensor in sensors:
-        if owproxy.present(sensor[0]):
-            value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
-            time.sleep(1)
-            sock.sendto(bytes(value, 'utf-8'),(UDP_IP, sensor[2]))
-        else:
-            print("Blad odczytu czujnika, restartuje owserver")
-            try:
-                retcode = subprocess.run(["/bin/systemctl", "restart", "owserver.service"], check=True)
-                retcode.check_returncode()
-                time.sleep(5)
-                if owproxy.present(sensor[0]):
-                    value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
-                    sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
-                else:
-                    print("Czujnik {} nadal nie dostepny".format(sensor[1]))
+        for sensor in sensors:
+            if owproxy.present(sensor[0]):
+                value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
+                time.sleep(1)
+                sock.sendto(bytes(value, 'utf-8'),(UDP_IP, sensor[2]))
+            else:
+                print("Blad odczytu czujnika, restartuje owserver")
+                try:
+                    retcode = subprocess.run(["/bin/systemctl", "restart", "owserver.service"], check=True)
+                    retcode.check_returncode()
+                    time.sleep(5)
+                    if owproxy.present(sensor[0]):
+                        value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
+                        sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                    else:
+                        print("Czujnik {} nadal nie dostepny".format(sensor[1]))
+                        panic()
+                except subprocess.CalledProcessError as e:
+                    print("blad restartu owserver")
                     panic()
-            except subprocess.CalledProcessError as e:
-                print("blad restartu owserver")
-                panic()
+    #except pyownet.protocol.OwnetError:
+    except:
+        try:
+            retcode = subprocess.run(["/bin/systemctl", "restart", "owserver.service"], check=True)
+            retcode.check_returncode()
+            time.sleep(5)
+        except subprocess.CalledProcessError as e:
+            print("blad restartu owserver")
+            panic()
+
