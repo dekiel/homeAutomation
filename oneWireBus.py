@@ -13,6 +13,7 @@ def panic():
     with open('/home/rock64/webAPI/status', 'w') as f:
         f.write("panic")
     sock.sendto(bytes('panic', 'utf-8'), (UDP_IP, 9999))
+    my_logger.critical("owserver niedostepny, restartuje system")
     os.system('reboot now')
 
 if __name__ == '__main__':
@@ -29,6 +30,7 @@ if __name__ == '__main__':
             if "oneWireBus" in p.name():
                 count += 1
                 if count > 2:
+                    my_logger.critical("dziala wiecej niz dwa procesy odczytu temperatury")
                     panic()
     time.sleep(5)
 
@@ -39,9 +41,9 @@ if __name__ == '__main__':
                 value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
                 time.sleep(1)
                 sock.sendto(bytes(value, 'utf-8'),(UDP_IP, sensor[2]))
-                my_logger.info("Read tmp for {}".format(sensor[1]))
+                #my_logger.info("Read tmp for {}".format(sensor[1]))
             else:
-                print("Blad odczytu czujnika, restartuje owserver")
+                my_logger.critical("Blad odczytu czujnika, restartuje owserver")
                 try:
                     retcode = subprocess.run(["/bin/systemctl", "restart", "owserver.service"], check=True)
                     retcode.check_returncode()
@@ -50,10 +52,10 @@ if __name__ == '__main__':
                         value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
                         sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
                     else:
-                        print("Czujnik {} nadal nie dostepny".format(sensor[1]))
+                        my_logger.critical("Czujnik {} nadal nie dostepny".format(sensor[1])
                         panic()
                 except subprocess.CalledProcessError as e:
-                    print("blad restartu owserver")
+                    my_logger.critical("blad restartu owserver")
                     panic()
     #except pyownet.protocol.OwnetError:
     except:
@@ -62,6 +64,6 @@ if __name__ == '__main__':
             retcode.check_returncode()
             time.sleep(5)
         except subprocess.CalledProcessError as e:
-            print("blad restartu owserver")
+            my_logger.critical("blad restartu owserver")
             panic()
 

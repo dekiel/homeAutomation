@@ -36,6 +36,9 @@ def lazienkaGoraOn():
 @app.route('/lazienka-gora-off')
 def lazienkaGoraOff():
     return heaterOFF(84, "lazienka-gora")
+@app.route('/lazienka-gora-status')
+def lazienkaGoraStatus():
+    return heaterStatus(84, "lazienka-gora")
 
 
 @app.route('/gabinet-on')
@@ -55,6 +58,9 @@ def sypialniaON():
 @app.route('/sypialnia-off')
 def sypialniaOFF():
     return heaterOFF(79, "sypialnia")
+@app.route('/sypialnia-status')
+def sypialniaStatus():
+    return heaterStatus(79, "sypialnia")
 
 @app.route('/przedpokoj-on')
 def przepokojON():
@@ -62,6 +68,9 @@ def przepokojON():
 @app.route('/przedpokoj-off')
 def przedpokojOff():
     return heaterOFF(83, "przedpokoj")
+@app.route('/przedpokoj-status')
+def przedpokojStatus():
+    return heaterStatus(83, "przedpokoj")
 
 
 @app.route('/lazienka-dol-on')
@@ -70,6 +79,9 @@ def lazienkaDolOn():
 @app.route('/lazienka-dol-off')
 def lazienkaDolOff():
     return heaterOFF(87, "lazienka-dol")
+@app.route('/lazienka-dol-status')
+def lazienkaDolStatus():
+    return heaterStatus(87, "lazienka-dol")
 
 
 @app.route('/zosia-on')
@@ -78,6 +90,9 @@ def zosiaON():
 @app.route('/zosia-off')
 def zosiaOFF():
     return heaterOFF(80, "zosia")
+@app.route('/zosia-status')
+def zosiaStatus():
+    return heaterStatus(80, "zosia")
 
 
 @app.route('/justyna-on')
@@ -86,6 +101,9 @@ def justynaON():
 @app.route('/justyna-off')
 def justynaOFF():
     return heaterOFF(81, "justyna")
+@app.route('/justyna-status')
+def justynaStatus():
+    return heaterStatus(81, "justyna")
 
 
 @app.route('/salon-on')
