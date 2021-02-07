@@ -42,7 +42,7 @@ if __name__ == '__main__':
             if owproxy.present(sensor[0]):
                 if sensor[1] == 'lazienka_gora':
                     value = (owproxy.read('%stemperature' % sensor[0]).decode('utf-8').strip())
-                    humidity = (owproxy.read('%humidity' % sensor[0]).decode('utf-8').strip())
+                    humidity = (owproxy.read('%shumidity' % sensor[0]).decode('utf-8').strip())
                     sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
                     sock.sendto(bytes(humidity, 'utf-8'), (UDP_IP, sensor[3]))
                 else:
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                     if owproxy.present(sensor[0]):
                         if sensor[1] == 'lazienka_gora':
                             value = (owproxy.read('%stemperature' % sensor[0]).decode('utf-8').strip())
-                            humidity = (owproxy.read('%humidity' % sensor[0]).decode('utf-8').strip())
+                            humidity = (owproxy.read('%shumidity' % sensor[0]).decode('utf-8').strip())
                             sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
                             sock.sendto(bytes(humidity, 'utf-8'), (UDP_IP, sensor[3]))
                         else:
