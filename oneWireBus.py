@@ -40,10 +40,12 @@ if __name__ == '__main__':
         owproxy = protocol.proxy(host="127.0.0.1", port=4304)
         for sensor in sensors:
             if owproxy.present(sensor[0]):
-                if sensor[1] == 'lazienka_gora':
+                if sensor[1] == 'lazienka_gora' or sensor[1] == 'lazienka_dol':
                     value = (owproxy.read('%stemperature' % sensor[0]).decode('utf-8').strip())
                     humidity = (owproxy.read('%shumidity' % sensor[0]).decode('utf-8').strip())
+                    time.sleep(1)
                     sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                    time.sleep(1)
                     sock.sendto(bytes(humidity, 'utf-8'), (UDP_IP, sensor[3]))
                 else:
                     value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
@@ -57,13 +59,16 @@ if __name__ == '__main__':
                     retcode.check_returncode()
                     time.sleep(5)
                     if owproxy.present(sensor[0]):
-                        if sensor[1] == 'lazienka_gora':
+                        if sensor[1] == 'lazienka_gora' or sensor[1] == 'lazienka_dol':
                             value = (owproxy.read('%stemperature' % sensor[0]).decode('utf-8').strip())
                             humidity = (owproxy.read('%shumidity' % sensor[0]).decode('utf-8').strip())
+                            time.sleep(1)
                             sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                            time.sleep(1)
                             sock.sendto(bytes(humidity, 'utf-8'), (UDP_IP, sensor[3]))
                         else:
                             value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
+                            time.sleep(1)
                             sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
                     else:
                         my_logger.critical("Czujnik {} nadal nie dostepny".format(sensor[1]))
