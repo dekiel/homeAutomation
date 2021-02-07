@@ -5,9 +5,10 @@ import socket, time, subprocess, psutil, os, logging, logging.handlers
 
 UDP_IP = "192.168.255.123"
 
-# stary adres ds1820 z lazienka gora: /28.FF2B55761801
+# stary adres ds1820 z lazienka gora: /28.FF2B55761801/
+# stary adres ds1820 z lazienka_dol: /28.FF575B6E1801/
 
-sensors = [('/28.8AAB110B0000/', 'grupa_mieszajaca', 9911), ('/28.AAE0F3521401/','zewnatrz', 9900), ('/28.FF6000691803/', 'radiostacja', 9901), ('/28.FF045C6E1801/', 'wc_dol', 9904), ('/28.FF9C5D6E1801/', 'sypialnia_lazienka',9909), ('/28.FFE35D6E1801/', 'salon_stol', 9906), ('/26.21AF930100007E/', 'lazienka_gora', 9910, 9912), ('/28.FF3B576E1801/', 'przedpokoj', 9905), ('/28.FFFB01691803/', 'salon_kanapa', 9907), ('/28.FFC703691803/', 'gabinet', 9908), ('/28.FF575B6E1801/', 'lazienka_dol', 9903), ('/28.FF5F576E1801/', 'czikita', 9902)]
+sensors = [('/28.8AAB110B0000/', 'grupa_mieszajaca', 9911), ('/28.AAE0F3521401/','zewnatrz', 9900), ('/28.FF6000691803/', 'radiostacja', 9901), ('/28.FF045C6E1801/', 'wc_dol', 9904), ('/28.FF9C5D6E1801/', 'sypialnia_lazienka',9909), ('/28.FFE35D6E1801/', 'salon_stol', 9906), ('/26.21AF930100007E/', 'lazienka_gora', 9910, 9912), ('/28.FF3B576E1801/', 'przedpokoj', 9905), ('/28.FFFB01691803/', 'salon_kanapa', 9907), ('/28.FFC703691803/', 'gabinet', 9908), ('/26.06AF93010000/', 'lazienka_dol', 9903), ('/28.FF5F576E1801/', 'czikita', 9902)]
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -40,10 +41,12 @@ if __name__ == '__main__':
         owproxy = protocol.proxy(host="127.0.0.1", port=4304)
         for sensor in sensors:
             if owproxy.present(sensor[0]):
-                if sensor[1] == 'lazienka_gora':
+                if sensor[1] == 'lazienka_gora' or sensor[1] == 'lazienka_dol':
                     value = (owproxy.read('%stemperature' % sensor[0]).decode('utf-8').strip())
                     humidity = (owproxy.read('%shumidity' % sensor[0]).decode('utf-8').strip())
+                    time.sleep(1)
                     sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                    time.sleep(1)
                     sock.sendto(bytes(humidity, 'utf-8'), (UDP_IP, sensor[3]))
                 else:
                     value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
@@ -57,13 +60,16 @@ if __name__ == '__main__':
                     retcode.check_returncode()
                     time.sleep(5)
                     if owproxy.present(sensor[0]):
-                        if sensor[1] == 'lazienka_gora':
+                        if sensor[1] == 'lazienka_gora' or sensor[1] == 'lazienka_dol':
                             value = (owproxy.read('%stemperature' % sensor[0]).decode('utf-8').strip())
                             humidity = (owproxy.read('%shumidity' % sensor[0]).decode('utf-8').strip())
+                            time.sleep(1)
                             sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
+                            time.sleep(1)
                             sock.sendto(bytes(humidity, 'utf-8'), (UDP_IP, sensor[3]))
                         else:
                             value = (owproxy.read('%stemperature10' % sensor[0]).decode('utf-8').strip())
+                            time.sleep(1)
                             sock.sendto(bytes(value, 'utf-8'), (UDP_IP, sensor[2]))
                     else:
                         my_logger.critical("Czujnik {} nadal nie dostepny".format(sensor[1]))
